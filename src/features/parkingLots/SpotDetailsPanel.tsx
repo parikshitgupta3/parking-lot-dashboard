@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react'
 import { Ban, MousePointerClick } from 'lucide-react'
 import { SectionCard, StatusBadge } from '../../components/ui'
-import { formatDateTime, formatDuration } from '../../lib/format'
-import { spotTypeMeta, vehicleTypeMeta } from '../../lib/vehicleMeta'
+import { spotTypeMeta } from '../../lib/vehicleMeta'
 import type { ParkingSpot as ParkingSpotData } from '../../types/parking'
 import { parkingSpotStatusLabels } from './spotStatus'
 
@@ -42,7 +41,6 @@ export default function SpotDetailsPanel({
   }
 
   const { label: typeLabel, icon: TypeIcon } = spotTypeMeta[spot.spotType]
-  const vehicle = spot.vehicle
 
   return (
     <SectionCard title="Spot details" className={className}>
@@ -69,25 +67,9 @@ export default function SpotDetailsPanel({
         {floorName && <DetailRow label="Floor" value={floorName} />}
       </div>
 
-      {vehicle ? (
-        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-          <h4 className="text-xs font-semibold text-gray-500">
-            Parked vehicle
-          </h4>
-          <div className="divide-y divide-gray-200/60">
-            <DetailRow
-              label="Vehicle number"
-              value={
-                <span className="font-mono">{vehicle.vehicleNumber}</span>
-              }
-            />
-            <DetailRow
-              label="Vehicle type"
-              value={vehicleTypeMeta[vehicle.vehicleType].label}
-            />
-            <DetailRow label="Entry time" value={formatDateTime(vehicle.entryTime)} />
-            <DetailRow label="Parked for" value={formatDuration(vehicle.entryTime)} />
-          </div>
+      {spot.status === 'occupied' ? (
+        <div className="mt-4 rounded-lg border border-indigo-100 bg-indigo-50 p-3 text-sm text-indigo-700">
+          This spot is occupied. Vehicle details live on the parking ticket.
         </div>
       ) : spot.status === 'out_of_service' ? (
         <div className="mt-4 flex items-start gap-2 rounded-lg bg-gray-100 p-3 text-sm text-gray-600">

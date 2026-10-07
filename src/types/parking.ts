@@ -1,6 +1,10 @@
 export type TicketStatus = 'active' | 'paid' | 'exited' | 'overdue'
 
-export type VehicleType = 'car' | 'motorcycle' | 'truck'
+/** Mirrors the backend's VehicleType enum, lowercased for the UI. */
+export type VehicleType = 'bike' | 'car' | 'truck'
+
+/** Mirrors the backend's SpotType enum, lowercased for the UI. */
+export type SpotType = 'bike' | 'compact' | 'large'
 
 export interface ParkingSummary {
   totalSpots: number
@@ -27,33 +31,40 @@ export interface ParkingActivity {
   status: TicketStatus
 }
 
+/** Mirrors the backend's SpotStatus enum, lowercased for the UI. */
 export type ParkingSpotStatus = 'available' | 'occupied' | 'out_of_service'
 
-export type SpotType = 'car' | 'motorcycle' | 'truck' | 'ev'
-
-export interface ParkedVehicle {
-  vehicleNumber: string
-  vehicleType: VehicleType
-  entryTime: string
-}
-
 export interface ParkingSpot {
+  /** Derived: unique within a lot (`floorNumber:spotNumber`). */
   id: string
+  /** The backend's spotNumber (e.g. "A-01"). */
   code: string
   status: ParkingSpotStatus
   spotType: SpotType
-  vehicle?: ParkedVehicle
 }
 
 export interface ParkingLotFloor {
+  /** Derived (`lotId:floor:N`). */
   id: string
+  /** Derived display name ("Floor 1"). */
   name: string
+  floorNumber: number
   spots: ParkingSpot[]
 }
 
 export interface ParkingLot {
   id: string
   name: string
-  address: string
   floors: ParkingLotFloor[]
+}
+
+export interface ParkingLotSummary {
+  id: string
+  name: string
+  floorCount: number
+  totalSpots: number
+}
+
+export interface ParkingLotAvailability {
+  availableSpotCount: number
 }

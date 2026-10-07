@@ -1,4 +1,4 @@
-import { Bike, Car, PlugZap, Truck } from 'lucide-react'
+import { Bike, Car, Truck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { SpotType, VehicleType } from '../types/parking'
 
@@ -7,8 +7,8 @@ export const vehicleTypeMeta: Record<
   VehicleType,
   { label: string; icon: LucideIcon }
 > = {
+  bike: { label: 'Bike', icon: Bike },
   car: { label: 'Car', icon: Car },
-  motorcycle: { label: 'Motorcycle', icon: Bike },
   truck: { label: 'Truck', icon: Truck },
 }
 
@@ -17,8 +17,7 @@ export const spotTypeMeta: Record<
   SpotType,
   { label: string; icon: LucideIcon }
 > = {
-  car: { label: 'Car', icon: Car },
-  motorcycle: { label: 'Motorcycle', icon: Bike },
-  truck: { label: 'Truck', icon: Truck },
-  ev: { label: 'EV charging', icon: PlugZap },
+  bike: { label: 'Bike', icon: Bike },
+  compact: { label: 'Compact', icon: Car },
+  large: { label: 'Large', icon: Truck },
 }

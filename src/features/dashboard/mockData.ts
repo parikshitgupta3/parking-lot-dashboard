@@ -36,7 +36,7 @@ export const mockRecentActivity: ParkingActivity[] = [
   {
     id: 't-1040',
     vehicleNumber: 'KA 05 MN 8112',
-    vehicleType: 'motorcycle',
+    vehicleType: 'bike',
     floorName: 'Ground Floor',
     spotCode: 'G-32',
     entryTime: minutesAgo(48),
@@ -76,7 +76,7 @@ export const mockRecentActivity: ParkingActivity[] = [
   {
     id: 't-1036',
     vehicleNumber: 'MH 12 QR 6633',
-    vehicleType: 'motorcycle',
+    vehicleType: 'bike',
     floorName: 'Floor 1',
     spotCode: 'A-41',
     entryTime: minutesAgo(260),
