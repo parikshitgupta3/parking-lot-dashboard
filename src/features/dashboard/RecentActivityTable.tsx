@@ -1,16 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Bike, Car, Truck } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import { SectionCard, StatusBadge } from '../../components/ui'
 import { formatDateTime } from '../../lib/format'
-import type { ParkingActivity, VehicleType } from '../../types/parking'
-
-const vehicleTypeMeta: Record<VehicleType, { label: string; icon: LucideIcon }> =
-  {
-    car: { label: 'Car', icon: Car },
-    motorcycle: { label: 'Motorcycle', icon: Bike },
-    truck: { label: 'Truck', icon: Truck },
-  }
+import { vehicleTypeMeta } from '../../lib/vehicleMeta'
+import type { ParkingActivity } from '../../types/parking'
 
 const statusLabels: Record<ParkingActivity['status'], string> = {
   active: 'Active',

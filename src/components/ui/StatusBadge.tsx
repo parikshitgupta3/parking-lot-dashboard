@@ -1,4 +1,5 @@
 import {
+  Ban,
   CircleCheck,
   Clock,
   LogOut,
@@ -10,6 +11,7 @@ import type { LucideIcon } from 'lucide-react'
 export type BadgeVariant =
   | 'available'
   | 'occupied'
+  | 'out_of_service'
   | 'active'
   | 'paid'
   | 'exited'
@@ -29,6 +31,10 @@ const badgeStyles: Record<BadgeVariant, BadgeStyle> = {
   occupied: {
     container: 'bg-indigo-50 text-indigo-700 ring-indigo-600/20',
     icon: SquareParking,
+  },
+  out_of_service: {
+    container: 'bg-gray-100 text-gray-600 ring-gray-500/20',
+    icon: Ban,
   },
   active: {
     container: 'bg-indigo-50 text-indigo-700 ring-indigo-600/20',

@@ -26,3 +26,34 @@ export interface ParkingActivity {
   exitTime: string | null
   status: TicketStatus
 }
+
+export type ParkingSpotStatus = 'available' | 'occupied' | 'out_of_service'
+
+export type SpotType = 'car' | 'motorcycle' | 'truck' | 'ev'
+
+export interface ParkedVehicle {
+  vehicleNumber: string
+  vehicleType: VehicleType
+  entryTime: string
+}
+
+export interface ParkingSpot {
+  id: string
+  code: string
+  status: ParkingSpotStatus
+  spotType: SpotType
+  vehicle?: ParkedVehicle
+}
+
+export interface ParkingLotFloor {
+  id: string
+  name: string
+  spots: ParkingSpot[]
+}
+
+export interface ParkingLot {
+  id: string
+  name: string
+  address: string
+  floors: ParkingLotFloor[]
+}
