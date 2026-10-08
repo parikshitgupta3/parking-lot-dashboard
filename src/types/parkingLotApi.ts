@@ -87,3 +87,16 @@ export interface TicketDto {
   fee: number | null
   status: TicketStatusDto
 }
+
+/** ActiveTicketResponse — one row of the active-tickets list */
+export interface ActiveTicketSummaryDto {
+  id: string
+  vehicleRegistrationNumber: string
+  vehicleType: VehicleTypeDto
+  spotNumber: string
+  spotType: SpotTypeDto
+  floorNumber: number
+  lotId: string
+  lotName: string
+  entryTime: string
+}

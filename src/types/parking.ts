@@ -77,3 +77,16 @@ export interface ParkingLotSummary {
 export interface ParkingLotAvailability {
   availableSpotCount: number
 }
+
+/** One row of the active-tickets list, with the spot's location joined in. */
+export interface ActiveTicketSummary {
+  ticketId: string
+  licensePlate: string
+  vehicleType: VehicleType
+  spotCode: string
+  spotType: SpotType
+  floorName: string
+  lotId: string
+  lotName: string
+  entryTime: string
+}
