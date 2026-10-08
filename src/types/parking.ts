@@ -34,6 +34,14 @@ export interface ParkingActivity {
 /** Mirrors the backend's SpotStatus enum, lowercased for the UI. */
 export type ParkingSpotStatus = 'available' | 'occupied' | 'out_of_service'
 
+/** The active ticket occupying a spot. */
+export interface ActiveTicket {
+  ticketId: string
+  licensePlate: string
+  vehicleType: VehicleType
+  entryTime: string
+}
+
 export interface ParkingSpot {
   /** Derived: unique within a lot (`floorNumber:spotNumber`). */
   id: string
@@ -41,6 +49,7 @@ export interface ParkingSpot {
   code: string
   status: ParkingSpotStatus
   spotType: SpotType
+  ticket?: ActiveTicket
 }
 
 export interface ParkingLotFloor {

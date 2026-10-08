@@ -4,6 +4,7 @@ import type {
   ParkingLotSummary,
   ParkingSpotStatus,
   SpotType,
+  VehicleType,
 } from '../../types/parking'
 import type {
   ParkingLotAvailabilityDto,
@@ -11,6 +12,7 @@ import type {
   ParkingLotSummaryDto,
   SpotStatusDto,
   SpotTypeDto,
+  VehicleTypeDto,
 } from '../../types/parkingLotApi'
 
 const spotStatusMap: Record<SpotStatusDto, ParkingSpotStatus> = {
@@ -23,6 +25,12 @@ const spotTypeMap: Record<SpotTypeDto, SpotType> = {
   BIKE: 'bike',
   COMPACT: 'compact',
   LARGE: 'large',
+}
+
+const vehicleTypeMap: Record<VehicleTypeDto, VehicleType> = {
+  BIKE: 'bike',
+  CAR: 'car',
+  TRUCK: 'truck',
 }
 
 export function mapParkingLotSummary(dto: ParkingLotSummaryDto): ParkingLotSummary {
@@ -47,6 +55,14 @@ export function mapParkingLotDetails(dto: ParkingLotDetailsDto): ParkingLot {
         code: spot.spotNumber,
         status: spotStatusMap[spot.status],
         spotType: spotTypeMap[spot.spotType],
+        ticket: spot.ticket
+          ? {
+              ticketId: spot.ticket.id,
+              licensePlate: spot.ticket.vehicleRegistrationNumber,
+              vehicleType: vehicleTypeMap[spot.ticket.vehicleType],
+              entryTime: spot.ticket.entryTime,
+            }
+          : undefined,
       })),
     })),
   }

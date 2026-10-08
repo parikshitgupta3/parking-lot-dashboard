@@ -24,11 +24,20 @@ export interface ParkingLotSummaryDto {
   totalSpots: number
 }
 
+/** ParkingLotDetailsResponse.ActiveTicketResponse */
+export interface ActiveTicketDto {
+  id: string
+  vehicleRegistrationNumber: string
+  vehicleType: VehicleTypeDto
+  entryTime: string
+}
+
 /** ParkingLotDetailsResponse.SpotResponse */
 export interface ParkingSpotDto {
   spotNumber: string
   spotType: SpotTypeDto
   status: SpotStatusDto
+  ticket: ActiveTicketDto | null
 }
 
 /** ParkingLotDetailsResponse.FloorResponse */

@@ -18,6 +18,7 @@ import ParkingFloor from '../features/parkingLots/ParkingFloor'
 import SpotDetailsPanel from '../features/parkingLots/SpotDetailsPanel'
 import SpotLegend from '../features/parkingLots/SpotLegend'
 import VehicleEntryModal from '../features/parkingLots/VehicleEntryModal'
+import VehicleExitModal from '../features/parkingLots/VehicleExitModal'
 import {
   mapParkingLotDetails,
   mapParkingLotSummary,
@@ -125,6 +126,7 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
   const [selectedFloorId, setSelectedFloorId] = useState<string | null>(null)
   const [selectedSpot, setSelectedSpot] = useState<ParkingSpotData | null>(null)
   const [entryModalOpen, setEntryModalOpen] = useState(false)
+  const [exitSpot, setExitSpot] = useState<ParkingSpotData | null>(null)
 
   const loadDetails = useCallback(
     (signal: AbortSignal) => fetchParkingLot(lotId, signal),
@@ -165,6 +167,23 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
     if (allocated) {
       // Optimistically show occupied; the reloaded details confirm it.
       setSelectedSpot({ ...allocated, status: 'occupied' })
+    }
+  }
+
+  /** Refresh counts/grid and free the selected spot immediately. */
+  function handleExitSuccess(completed: TicketDto) {
+    detailsQuery.reload()
+    availabilityQuery.reload()
+
+    if (
+      selectedSpot?.ticket &&
+      selectedSpot.ticket.ticketId === completed.id
+    ) {
+      setSelectedSpot({
+        ...selectedSpot,
+        status: 'available',
+        ticket: undefined,
+      })
     }
   }
 
@@ -300,6 +319,7 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
         <SpotDetailsPanel
           spot={selectedSpot}
           floorName={selectedFloor?.name}
+          onExit={setExitSpot}
           className="h-fit xl:sticky xl:top-20"
         />
       </div>
@@ -310,6 +330,19 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
           lotName={lotName}
           onClose={() => setEntryModalOpen(false)}
           onEntrySuccess={handleEntrySuccess}
+        />
+      )}
+
+      {exitSpot?.ticket && (
+        <VehicleExitModal
+          spot={exitSpot}
+          floorName={
+            floors.find((floor) =>
+              floor.spots.some((spot) => spot.id === exitSpot.id),
+            )?.name
+          }
+          onClose={() => setExitSpot(null)}
+          onExitSuccess={handleExitSuccess}
         />
       )}
     </>
