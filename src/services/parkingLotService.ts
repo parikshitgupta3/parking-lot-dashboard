@@ -1,8 +1,10 @@
-import { apiGet } from '../lib/apiClient'
+import { apiGet, apiPost } from '../lib/apiClient'
 import type {
   ParkingLotAvailabilityDto,
   ParkingLotDetailsDto,
   ParkingLotSummaryDto,
+  TicketDto,
+  VehicleEntryRequestDto,
 } from '../types/parkingLotApi'
 
 const BASE_PATH = '/api/v1/parking-lots'
@@ -18,7 +20,7 @@ export function fetchParkingLots(
 export function fetchParkingLot(
   id: string,
   signal?: AbortSignal,
-): Promise<ParkingLotDetailsDto> {x
+): Promise<ParkingLotDetailsDto> {
   return apiGet<ParkingLotDetailsDto>(
     `${BASE_PATH}/${encodeURIComponent(id)}`,
     signal,
@@ -33,5 +35,16 @@ export function fetchParkingLotAvailability(
   return apiGet<ParkingLotAvailabilityDto>(
     `${BASE_PATH}/${encodeURIComponent(id)}/availability`,
     signal,
+  )
+}
+
+/** POST /api/v1/parking-lots/{id}/vehicles/entry — admit a vehicle, open a ticket. */
+export function admitVehicle(
+  lotId: string,
+  request: VehicleEntryRequestDto,
+): Promise<TicketDto> {
+  return apiPost<TicketDto>(
+    `${BASE_PATH}/${encodeURIComponent(lotId)}/vehicles/entry`,
+    request,
   )
 }

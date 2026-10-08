@@ -17,6 +17,7 @@ import {
 import ParkingFloor from '../features/parkingLots/ParkingFloor'
 import SpotDetailsPanel from '../features/parkingLots/SpotDetailsPanel'
 import SpotLegend from '../features/parkingLots/SpotLegend'
+import VehicleEntryModal from '../features/parkingLots/VehicleEntryModal'
 import {
   mapParkingLotDetails,
   mapParkingLotSummary,
@@ -28,6 +29,7 @@ import {
   fetchParkingLots,
 } from '../services/parkingLotService'
 import type { ParkingSpot as ParkingSpotData } from '../types/parking'
+import type { TicketDto } from '../types/parkingLotApi'
 
 export default function ParkingLotsPage() {
   const [selectedLotId, setSelectedLotId] = useState<string | null>(null)
@@ -122,6 +124,7 @@ interface LotSectionProps {
 function LotSection({ lotId, lotName }: LotSectionProps) {
   const [selectedFloorId, setSelectedFloorId] = useState<string | null>(null)
   const [selectedSpot, setSelectedSpot] = useState<ParkingSpotData | null>(null)
+  const [entryModalOpen, setEntryModalOpen] = useState(false)
 
   const loadDetails = useCallback(
     (signal: AbortSignal) => fetchParkingLot(lotId, signal),
@@ -144,6 +147,25 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
   function handleFloorChange(floorId: string) {
     setSelectedFloorId(floorId)
     setSelectedSpot(null)
+  }
+
+  /** Refresh counts/grid and jump to the freshly allocated spot. */
+  function handleEntrySuccess(newTicket: TicketDto) {
+    detailsQuery.reload()
+    availabilityQuery.reload()
+
+    const floor = floors.find((f) =>
+      f.spots.some((spot) => spot.code === newTicket.spotNumber),
+    )
+    if (!floor) return
+    setSelectedFloorId(floor.id)
+    const allocated = floor.spots.find(
+      (spot) => spot.code === newTicket.spotNumber,
+    )
+    if (allocated) {
+      // Optimistically show occupied; the reloaded details confirm it.
+      setSelectedSpot({ ...allocated, status: 'occupied' })
+    }
   }
 
   return (
@@ -190,11 +212,12 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
         </div>
       )}
 
-      {floors.length > 0 && (
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {floors.length > 0 && (
         <div
           role="tablist"
           aria-label="Floors"
-          className="mb-4 flex gap-1 overflow-x-auto rounded-lg border border-gray-200 bg-white p-1"
+          className="flex gap-1 overflow-x-auto rounded-lg border border-gray-200 bg-white p-1"
         >
           {floors.map((floor) => {
             const available = floor.spots.filter(
@@ -224,8 +247,18 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
               </button>
             )
           })}
-        </div>
-      )}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setEntryModalOpen(true)}
+          className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+        >
+          <Car className="h-4 w-4" />
+          Enter vehicle
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
         <SectionCard
@@ -270,6 +303,15 @@ function LotSection({ lotId, lotName }: LotSectionProps) {
           className="h-fit xl:sticky xl:top-20"
         />
       </div>
+
+      {entryModalOpen && (
+        <VehicleEntryModal
+          lotId={lotId}
+          lotName={lotName}
+          onClose={() => setEntryModalOpen(false)}
+          onEntrySuccess={handleEntrySuccess}
+        />
+      )}
     </>
   )
 }

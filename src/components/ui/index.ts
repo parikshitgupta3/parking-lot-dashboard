@@ -1,5 +1,6 @@
 export { default as EmptyState } from './EmptyState'
 export { default as ErrorState } from './ErrorState'
+export { default as Modal } from './Modal'
 export { default as SectionCard } from './SectionCard'
 export { default as Spinner } from './Spinner'
 export { default as StatCard } from './StatCard'

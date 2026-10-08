@@ -56,3 +56,25 @@ export interface ParkingLotAvailabilityDto {
   availableSpotCount: number
   spots: AvailableSpotDto[]
 }
+
+/** Mirrors the backend's TicketStatus enum. */
+export type TicketStatusDto = 'ACTIVE' | 'COMPLETED'
+
+/** VehicleEntryRequest */
+export interface VehicleEntryRequestDto {
+  registrationNumber: string
+  vehicleType: VehicleTypeDto
+}
+
+/** TicketResponse */
+export interface TicketDto {
+  id: string
+  vehicleRegistrationNumber: string
+  vehicleType: VehicleTypeDto
+  spotNumber: string
+  spotType: SpotTypeDto
+  entryTime: string
+  exitTime: string | null
+  fee: number | null
+  status: TicketStatusDto
+}

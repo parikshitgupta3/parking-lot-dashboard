@@ -35,14 +35,14 @@ function extractMessage(body: unknown, fallback: string): string {
   return fallback
 }
 
-/** GET a JSON resource, mapping every failure mode to ApiError. */
-export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> {
+async function request<T>(
+  path: string,
+  init: RequestInit,
+  signal?: AbortSignal,
+): Promise<T> {
   let response: Response
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
-      headers: { Accept: 'application/json' },
-      signal,
-    })
+    response = await fetch(`${API_BASE_URL}${path}`, { ...init, signal })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error
     throw new ApiError(
@@ -64,4 +64,29 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
   }
 
   return (await response.json()) as T
+}
+
+/** GET a JSON resource, mapping every failure mode to ApiError. */
+export function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> {
+  return request<T>(path, { headers: { Accept: 'application/json' } }, signal)
+}
+
+/** POST a JSON body, mapping every failure mode to ApiError. */
+export function apiPost<T>(
+  path: string,
+  body: unknown,
+  signal?: AbortSignal,
+): Promise<T> {
+  return request<T>(
+    path,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    },
+    signal,
+  )
 }
